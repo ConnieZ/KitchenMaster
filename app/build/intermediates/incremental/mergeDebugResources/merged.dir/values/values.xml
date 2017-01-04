@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <string name="app_name">KitchenMaster</string>
+    <string name="bought">BOUGHT</string>
+    <string name="buyqty">Buy</string>
+    <string name="confirm">Confirm</string>
+    <string name="edit_item">Edit Item</string>
+    <string name="header_buyqty">Buy</string>
+    <string name="header_invqty">I have</string>
+    <string name="header_name">Item</string>
+    <string name="invqty">I have</string>
+    <string name="menu_delete">Delete Item</string>
+    <string name="menu_insert">Add Item</string>
+    <string name="name">Item Name</string>
+    <string name="no_items">No Items Yet</string>
+    <string name="shop_list">Shopping List</string>
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+    <style name="HeaderStyle">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:padding">10dip</item>
+        <item name="android:background">#9c0</item>
+    </style>
+    <style name="ItemRow">
+        <item name="android:textSize">18sp</item>
+        <item name="android:padding">5dip</item>
+    </style>
+</resources>

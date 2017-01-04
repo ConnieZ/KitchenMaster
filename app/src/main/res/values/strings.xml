@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">KitchenMaster</string>
+    <string name="no_items">No Items Yet</string>
+    <string name="menu_insert">Add Item</string>
+    <string name="menu_delete">Delete Item</string>
+    <string name="name">Item Name</string>
+    <string name="invqty">I have</string>
+    <string name="buyqty">Buy</string>
+    <string name="confirm">Confirm</string>
+    <string name="edit_item">Edit Item</string>
+    <string name="header_name">Item</string>
+    <string name="header_invqty">I have</string>
+    <string name="header_buyqty">Buy</string>
+    <string name="bought">BOUGHT</string>
+    <string name="shop_list">Shopping List</string>
+</resources>

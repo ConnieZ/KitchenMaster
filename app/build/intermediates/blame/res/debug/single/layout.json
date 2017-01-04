@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "C:\\Users\\connie_zest\\StudioProjects\\KitchenMaster\\app\\build\\intermediates\\res\\merged\\debug\\layout\\shopping_list.xml",
+        "source": "C:\\Users\\connie_zest\\StudioProjects\\KitchenMaster\\app\\src\\main\\res\\layout\\shopping_list.xml"
+    },
+    {
+        "merged": "C:\\Users\\connie_zest\\StudioProjects\\KitchenMaster\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_kitchen_master.xml",
+        "source": "C:\\Users\\connie_zest\\StudioProjects\\KitchenMaster\\app\\src\\main\\res\\layout\\activity_kitchen_master.xml"
+    },
+    {
+        "merged": "C:\\Users\\connie_zest\\StudioProjects\\KitchenMaster\\app\\build\\intermediates\\res\\merged\\debug\\layout\\item_edit.xml",
+        "source": "C:\\Users\\connie_zest\\StudioProjects\\KitchenMaster\\app\\src\\main\\res\\layout\\item_edit.xml"
+    },
+    {
+        "merged": "C:\\Users\\connie_zest\\StudioProjects\\KitchenMaster\\app\\build\\intermediates\\res\\merged\\debug\\layout\\item_row.xml",
+        "source": "C:\\Users\\connie_zest\\StudioProjects\\KitchenMaster\\app\\src\\main\\res\\layout\\item_row.xml"
+    },
+    {
+        "merged": "C:\\Users\\connie_zest\\StudioProjects\\KitchenMaster\\app\\build\\intermediates\\res\\merged\\debug\\layout\\shop_list_row.xml",
+        "source": "C:\\Users\\connie_zest\\StudioProjects\\KitchenMaster\\app\\src\\main\\res\\layout\\shop_list_row.xml"
+    }
+]
