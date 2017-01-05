@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">KitchenMaster</string>
     <string name="no_items">No Items Yet</string>
     <string name="menu_insert">Add Item</string>
