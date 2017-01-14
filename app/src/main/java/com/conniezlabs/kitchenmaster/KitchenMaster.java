@@ -4,6 +4,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -15,7 +16,9 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-public class KitchenMaster extends ListActivity {
+import java.util.ArrayList;
+
+public class KitchenMaster extends AppCompatActivity {
 	
 	//for logging and debugging
 	private static final String TAG = "KitchenMaster-Main";
@@ -28,7 +31,8 @@ public class KitchenMaster extends ListActivity {
     private static final int DELETE_ID = Menu.FIRST + 1;
 
     private ItemsDbAdapter mDbHelper;
-   
+    ListView listView;
+
 
     /** Called when the activity is first created. */
     @Override
@@ -39,27 +43,53 @@ public class KitchenMaster extends ListActivity {
         mDbHelper = new ItemsDbAdapter(this);
         mDbHelper.open();
         fillData();
-        registerForContextMenu(getListView());
+//        registerForContextMenu(getListView());
         Log.e(TAG, "success onCreate");
     }
 
     private void fillData() {
     	Log.e(TAG, "entered fillData");
-    	// Get all of the rows from the database and create the item list
+
         Cursor itemsCursor = mDbHelper.fetchAllItems();
-        startManagingCursor(itemsCursor);
 
-        // Create an array to specify the fields we want to display in the list 
-        String[] from = new String[]{ItemsDbAdapter.KEY_NAME, ItemsDbAdapter.KEY_INVQTY, ItemsDbAdapter.KEY_BUYQTY};
+        ArrayList<Entry> items = new ArrayList<Entry>();
+        Log.e(TAG, "size of items " + items.size());
 
-        // and an array of the text fields we want to bind those db fields to 
-        int[] to = new int[]{R.id.text_name, R.id.text_invqty, R.id.text_buyqty};
+        if(itemsCursor.moveToFirst()){
+            do{
+                items.add(new Entry(itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME)),
+                        itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY)),
+                        itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY))));
+                Log.e(TAG, "added " + ItemsDbAdapter.KEY_NAME + " item");
 
-        // Now create a simple cursor adapter and set it to display
-        SimpleCursorAdapter items = 
-            new SimpleCursorAdapter(this, R.layout.item_row, itemsCursor, from, to);
-        setListAdapter(items);
-        
+            }while(itemsCursor.moveToNext());
+        }
+        itemsCursor.close();
+
+        // Bind to our new adapter.
+
+        EntryAdapter adapter = new EntryAdapter(KitchenMaster.this, items);
+        // the following two lines are replacements for commented out code
+        listView = (ListView) findViewById(R.id.listview);
+        listView.setAdapter(adapter);
+
+
+        // Old Method Below
+//    	// Get all of the rows from the database and create the item list
+//        Cursor itemsCursor = mDbHelper.fetchAllItems();
+//        startManagingCursor(itemsCursor);
+//
+//        // Create an array to specify the fields we want to display in the list
+//        String[] from = new String[]{ItemsDbAdapter.KEY_NAME, ItemsDbAdapter.KEY_INVQTY, ItemsDbAdapter.KEY_BUYQTY};
+//
+//        // and an array of the text fields we want to bind those db fields to
+//        int[] to = new int[]{R.id.text_name, R.id.text_invqty, R.id.text_buyqty};
+//
+//        // Now create a simple cursor adapter and set it to display
+//        SimpleCursorAdapter items =
+//            new SimpleCursorAdapter(this, R.layout.item_row, itemsCursor, from, to);
+//        setListAdapter(items);
+//
         Log.e(TAG, "finished fillData");
     }
 
@@ -75,77 +105,77 @@ public class KitchenMaster extends ListActivity {
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
     	Log.e(TAG, "entered onMenuItemSelected");
         switch(item.getItemId()) {
             case INSERT_ID:
                 createItem();
                 return true;
             case SHOP_LIST_ID:
-                openShopList();
+//                openShopList();
                 return true;
         }
         Log.e(TAG, "finished onMenuItemSelected");
-        return super.onMenuItemSelected(featureId, item);
+        return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-            ContextMenuInfo menuInfo) {
-    	Log.e(TAG, "entered onCreateContextMenu");
-        super.onCreateContextMenu(menu, v, menuInfo);
-        menu.add(0, DELETE_ID, 0, R.string.menu_delete);
-        Log.e(TAG, "finished onCreateContextMenu");
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case DELETE_ID:
-            	Log.e(TAG, "entered onContextItemSelected");
-                AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-                mDbHelper.deleteItem(info.id);
-                fillData();
-                return true;
-        }
-        Log.e(TAG, "finished onContextItemSelected");
-        return super.onContextItemSelected(item);
-    }
-
+//
+//    @Override
+//    public void onCreateContextMenu(ContextMenu menu, View v,
+//            ContextMenuInfo menuInfo) {
+//    	Log.e(TAG, "entered onCreateContextMenu");
+//        super.onCreateContextMenu(menu, v, menuInfo);
+//        menu.add(0, DELETE_ID, 0, R.string.menu_delete);
+//        Log.e(TAG, "finished onCreateContextMenu");
+//    }
+//
+//    @Override
+//    public boolean onContextItemSelected(MenuItem item) {
+//        switch(item.getItemId()) {
+//            case DELETE_ID:
+//            	Log.e(TAG, "entered onContextItemSelected");
+//                AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+//                mDbHelper.deleteItem(info.id);
+//                fillData();
+//                return true;
+//        }
+//        Log.e(TAG, "finished onContextItemSelected");
+//        return super.onContextItemSelected(item);
+//    }
+//
     private void createItem() {
     	Log.e(TAG, "entered createItem");
         Intent i = new Intent(this, ItemEdit.class);
         startActivityForResult(i, ACTIVITY_CREATE);
         Log.e(TAG, "finished createItem");
     }
-    
-    //call to activity that will open shopping list
-    private void openShopList() {
-    	Log.e(TAG, "entered openShopList");
-        Intent i = new Intent(this, ShoppingList.class);
-        startActivity(i);
-        Log.e(TAG, "finished openShopList");
-    }
-
-
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-    	Log.e(TAG, "entered onListItemClick");
-    	super.onListItemClick(l, v, position, id);
-        
-        Intent i = new Intent(this, ItemEdit.class);
-        i.putExtra(ItemsDbAdapter.KEY_ROWID, id);
-        
-        startActivityForResult(i, ACTIVITY_EDIT);
-        Log.e(TAG, "finished onListItemClick");
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-    	Log.e(TAG, "entered onActivityResult");
-    	super.onActivityResult(requestCode, resultCode, intent);
-        fillData();
-        Log.e(TAG, "finished onActivityResult");
-    }
+//
+//    //call to activity that will open shopping list
+//    private void openShopList() {
+//    	Log.e(TAG, "entered openShopList");
+//        Intent i = new Intent(this, ShoppingList.class);
+//        startActivity(i);
+//        Log.e(TAG, "finished openShopList");
+//    }
+//
+//
+//    @Override
+//    protected void onListItemClick(ListView l, View v, int position, long id) {
+//    	Log.e(TAG, "entered onListItemClick");
+//    	super.onListItemClick(l, v, position, id);
+//
+//        Intent i = new Intent(this, ItemEdit.class);
+//        i.putExtra(ItemsDbAdapter.KEY_ROWID, id);
+//
+//        startActivityForResult(i, ACTIVITY_EDIT);
+//        Log.e(TAG, "finished onListItemClick");
+//    }
+//
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+//    	Log.e(TAG, "entered onActivityResult");
+//    	super.onActivityResult(requestCode, resultCode, intent);
+//        fillData();
+//        Log.e(TAG, "finished onActivityResult");
+//    }
 }
 
