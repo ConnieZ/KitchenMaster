@@ -19,8 +19,8 @@ import java.io.InputStreamReader;
  * Simple items database access helper class. Defines the basic CRUD operations
  *, and gives the ability to list all items as well as
  * retrieve or modify a specific item.
- * 
- * 
+ *
+ *
  */
 public class ItemsDbAdapter {
 
@@ -37,8 +37,8 @@ public class ItemsDbAdapter {
      * Item Database creation sql statement
      */
     private static final String DATABASE_CREATE =
-        "create table inventory (_id integer primary key autoincrement, "
-        + "name text not null, invqty text not null, buyqty text not null);";
+            "create table inventory (_id integer primary key autoincrement, "
+                    + "name text not null, invqty text not null, buyqty text not null);";
 
     private static final String DATABASE_NAME = "data";
     private static final String DATABASE_TABLE = "inventory";
@@ -129,9 +129,9 @@ public class ItemsDbAdapter {
 
         Cursor mCursor =
 
-            mDb.query(true, DATABASE_TABLE, new String[] {KEY_ROWID,
-                    KEY_NAME, KEY_INVQTY, KEY_BUYQTY}, KEY_ROWID + "=" + rowId, null,
-                    null, null, null, null);
+                mDb.query(true, DATABASE_TABLE, new String[] {KEY_ROWID,
+                                KEY_NAME, KEY_INVQTY, KEY_BUYQTY}, KEY_ROWID + "=" + rowId, null,
+                        null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
@@ -144,13 +144,13 @@ public class ItemsDbAdapter {
      * the shopping list
      */
     public Cursor getShopListItems() {
-    	Cursor cursor = mDb.query(true, DATABASE_TABLE, new String[] {KEY_ROWID,
-                    KEY_NAME, KEY_INVQTY, KEY_BUYQTY}, "buyqty is not null and buyqty <>''", null, null, null, KEY_NAME + " COLLATE NOCASE ASC", null);
-    	if (cursor != null) {
-    		cursor.moveToFirst();
-    	}
-    	Log.d(TAG, "getShopListItems executed");
-    	return cursor;
+        Cursor cursor = mDb.query(true, DATABASE_TABLE, new String[] {KEY_ROWID,
+                KEY_NAME, KEY_INVQTY, KEY_BUYQTY}, "buyqty is not null and buyqty <>''", null, null, null, KEY_NAME + " COLLATE NOCASE ASC", null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+        Log.d(TAG, "getShopListItems executed");
+        return cursor;
     }
 
     /**
@@ -190,58 +190,58 @@ public class ItemsDbAdapter {
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(DATABASE_CREATE);
-            loadInitialItems();
+//            loadInitialItems();
             mDatabase = db;
         }
 
 
-        private void loadInitialItems() {
-            Log.e(TAG, "inside loadInitialItems");
-//            new Thread(new Runnable() {
-//                public void run() {
-                    try {
-                        loadItems();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+//        private void loadInitialItems() {
+//            Log.e(TAG, "inside loadInitialItems");
+////            new Thread(new Runnable() {
+////                public void run() {
+//            try {
+//                loadItems();
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+////                }
+////            }).start();
+//        }
+//
+//        private void loadItems() throws IOException {
+//            Log.e(TAG, "inside loadItems");
+//
+//            final Resources resources = mHelperContext.getResources();
+//            InputStream inputStream = resources.openRawResource(R.raw.initial_items);
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+//
+//            try {
+//                String line;
+//                while ((line = reader.readLine()) != null) {
+//                    Log.e(TAG, "inside loadItems, reading line: " + line);
+//
+//                    String[] strings = TextUtils.split(line, "-");
+//                    if (strings.length < 2) continue;
+//                    long id = addItem(strings);
+//                    if (id < 0) {
+//                        Log.e(TAG, "unable to add word: " + strings[0].trim());
+//                    }
 //                }
-//            }).start();
-        }
-
-        private void loadItems() throws IOException {
-            Log.e(TAG, "inside loadItems");
-
-            final Resources resources = mHelperContext.getResources();
-            InputStream inputStream = resources.openRawResource(R.raw.initial_items);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            try {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    Log.e(TAG, "inside loadItems, reading line: " + line);
-
-                    String[] strings = TextUtils.split(line, "-");
-                    if (strings.length < 2) continue;
-                    long id = addItem(strings);
-                    if (id < 0) {
-                        Log.e(TAG, "unable to add word: " + strings[0].trim());
-                    }
-                }
-            } finally {
-                reader.close();
-            }
-        }
-
-        public long addItem(String[] strings) {
-            Log.e(TAG, "inside addItem");
-
-            ContentValues initialValues = new ContentValues();
-            initialValues.put(KEY_NAME, strings[0].trim());
-            initialValues.put(KEY_INVQTY, strings[1].trim());
-            initialValues.put(KEY_BUYQTY, "0");
-
-            return mDatabase.insert(DATABASE_TABLE, null, initialValues);
-        }
+//            } finally {
+//                reader.close();
+//            }
+//        }
+//
+//        public long addItem(String[] strings) {
+//            Log.e(TAG, "inside addItem");
+//
+//            ContentValues initialValues = new ContentValues();
+//            initialValues.put(KEY_NAME, strings[0].trim());
+//            initialValues.put(KEY_INVQTY, strings[1].trim());
+//            initialValues.put(KEY_BUYQTY, "0");
+//
+//            return mDatabase.insert(DATABASE_TABLE, null, initialValues);
+//        }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

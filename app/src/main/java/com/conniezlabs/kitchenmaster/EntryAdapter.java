@@ -46,8 +46,8 @@ public class EntryAdapter extends BaseAdapter {
         Entry item = (Entry) list.get(position);
         if (item != null) {
             TextView t_name = (TextView) v.findViewById(R.id.text_name);
-            TextView t_inv_qty = (TextView) v.findViewById(R.id.invqty);
-            TextView t_buy_qty = (TextView) v.findViewById(R.id.buyqty);
+            TextView t_inv_qty = (TextView) v.findViewById(R.id.text_invqty);
+            TextView t_buy_qty = (TextView) v.findViewById(R.id.text_buyqty);
 
             // check to see if each individual textview is null.
             // if not, assign some text!

@@ -9,8 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 public class ItemEdit extends Activity {
-	//for logging and debugging
-	private static final String TAG = "KitchenMaster-ItemEdit";
+    //for logging and debugging
+    private static final String TAG = "KitchenMaster-ItemEdit";
 
     private EditText mNameText;
     private EditText mInvQtyText;
@@ -18,106 +18,106 @@ public class ItemEdit extends Activity {
     private Long mRowId;
     private ItemsDbAdapter mDbHelper;
 
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//    	Log.e(TAG, "entered onCreate");
-//        super.onCreate(savedInstanceState);
-//
-//        //create an instance of the ItemsDbAdapter
-//        mDbHelper = new ItemsDbAdapter(this);
-//        mDbHelper.open();
-//
-//        setContentView(R.layout.item_edit);
-//        setTitle(R.string.edit_item);
-//
-//        mNameText = (EditText) findViewById(R.id.name);
-//        mInvQtyText = (EditText) findViewById(R.id.invqty);
-//        mBuyQtyText = (EditText) findViewById(R.id.buyqty);
-//
-//        Button confirmButton = (Button) findViewById(R.id.confirm);
-//
-//        //check the savedInstanceState for the mRowId, in case the item editing contains a saved state in the Bundle
-//        mRowId = (savedInstanceState == null) ? null :
-//            (Long) savedInstanceState.getSerializable(ItemsDbAdapter.KEY_ROWID);
-//        if (mRowId == null) {
-//            Bundle extras = getIntent().getExtras();
-//            mRowId = extras != null ? extras.getLong(ItemsDbAdapter.KEY_ROWID)
-//                                    : null;
-//        Log.e(TAG, "finished onCreate");
-//        }
-//
-//        //to populate the fields based on the mRowId if we have it
-//        populateFields();
-//
-//        confirmButton.setOnClickListener(new View.OnClickListener() {
-//
-//        	public void onClick(View view) {
-//                setResult(RESULT_OK);
-//                finish();
-//            }
-//
-//
-//        });
-//
-//
-//    }
-//
-//    //call this method to read the item out of the database again and populate the fields
-//    private void populateFields() {
-//    	Log.e(TAG, "entered populateFields");
-//        if (mRowId != null) {
-//            Cursor item = mDbHelper.fetchItem(mRowId);
-//            startManagingCursor(item);
-//            mNameText.setText(item.getString(
-//                        item.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME)));
-//            mInvQtyText.setText(item.getString(
-//                    item.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY)));
-//            mBuyQtyText.setText(item.getString(
-//                    item.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY)));
-//        }
-//        Log.e(TAG, "finished populateFields");
-//    }
-//
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
-//    	Log.e(TAG, "entered onSaveInstanceState");
-//        super.onSaveInstanceState(outState);
-//        saveState();
-//        outState.putSerializable(ItemsDbAdapter.KEY_ROWID, mRowId);
-//        Log.e(TAG, "finished onSaveInstanceState");
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//    	Log.e(TAG, "entered onPause");
-//        super.onPause();
-//        saveState();
-//        Log.e(TAG, "finished onPause");
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//    	Log.e(TAG, "entered onResume");
-//        super.onResume();
-//        populateFields();
-//        Log.e(TAG, "finished onResume");
-//    }
-//
-//    //Define the saveState() method to put the data out to the database.
-//    private void saveState() {
-//    	Log.e(TAG, "entered saveState");
-//        String name = mNameText.getText().toString();
-//        String invqty = mInvQtyText.getText().toString();
-//        String buyqty = mBuyQtyText.getText().toString();
-//
-//        if (mRowId == null) {
-//            long id = mDbHelper.createItem(name, invqty, buyqty);
-//            if (id > 0) {
-//                mRowId = id;
-//            }
-//        } else {
-//            mDbHelper.updateItem(mRowId, name, invqty, buyqty);
-//        }
-//        Log.e(TAG, "finished saveState");
-//    }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+    	Log.e(TAG, "entered onCreate");
+        super.onCreate(savedInstanceState);
+
+        //create an instance of the ItemsDbAdapter
+        mDbHelper = new ItemsDbAdapter(this);
+        mDbHelper.open();
+
+        setContentView(R.layout.item_edit);
+        setTitle(R.string.edit_item);
+
+        mNameText = (EditText) findViewById(R.id.name);
+        mInvQtyText = (EditText) findViewById(R.id.invqty);
+        mBuyQtyText = (EditText) findViewById(R.id.buyqty);
+
+        Button confirmButton = (Button) findViewById(R.id.confirm);
+
+        //check the savedInstanceState for the mRowId, in case the item editing contains a saved state in the Bundle
+        mRowId = (savedInstanceState == null) ? null :
+            (Long) savedInstanceState.getSerializable(ItemsDbAdapter.KEY_ROWID);
+        if (mRowId == null) {
+            Bundle extras = getIntent().getExtras();
+            mRowId = extras != null ? extras.getLong(ItemsDbAdapter.KEY_ROWID)
+                                    : null;
+        Log.e(TAG, "finished onCreate");
+        }
+
+        //to populate the fields based on the mRowId if we have it
+        populateFields();
+
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+
+        	public void onClick(View view) {
+                setResult(RESULT_OK);
+                finish();
+            }
+
+
+        });
+
+
+    }
+
+    //call this method to read the item out of the database again and populate the fields
+    private void populateFields() {
+    	Log.e(TAG, "entered populateFields");
+        if (mRowId != null) {
+            Cursor item = mDbHelper.fetchItem(mRowId);
+            startManagingCursor(item);
+            mNameText.setText(item.getString(
+                        item.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME)));
+            mInvQtyText.setText(item.getString(
+                    item.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY)));
+            mBuyQtyText.setText(item.getString(
+                    item.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY)));
+        }
+        Log.e(TAG, "finished populateFields");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+    	Log.e(TAG, "entered onSaveInstanceState");
+        super.onSaveInstanceState(outState);
+        saveState();
+        outState.putSerializable(ItemsDbAdapter.KEY_ROWID, mRowId);
+        Log.e(TAG, "finished onSaveInstanceState");
+    }
+
+    @Override
+    protected void onPause() {
+    	Log.e(TAG, "entered onPause");
+        super.onPause();
+        saveState();
+        Log.e(TAG, "finished onPause");
+    }
+
+    @Override
+    protected void onResume() {
+    	Log.e(TAG, "entered onResume");
+        super.onResume();
+        populateFields();
+        Log.e(TAG, "finished onResume");
+    }
+
+    //Define the saveState() method to put the data out to the database.
+    private void saveState() {
+    	Log.e(TAG, "entered saveState");
+        String name = mNameText.getText().toString();
+        String invqty = mInvQtyText.getText().toString();
+        String buyqty = mBuyQtyText.getText().toString();
+
+        if (mRowId == null) {
+            long id = mDbHelper.createItem(name, invqty, buyqty);
+            if (id > 0) {
+                mRowId = id;
+            }
+        } else {
+            mDbHelper.updateItem(mRowId, name, invqty, buyqty);
+        }
+        Log.e(TAG, "finished saveState");
+    }
 }

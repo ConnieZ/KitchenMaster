@@ -12,17 +12,19 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import java.util.ArrayList;
-
 public class KitchenMaster extends AppCompatActivity {
-	
-	//for logging and debugging
-	private static final String TAG = "KitchenMaster-Main";
-	
+
+//public class KitchenMaster extends AppCompatActivity implements View.OnClickListener{
+
+    //for logging and debugging
+    private static final String TAG = "KitchenMaster-Main";
+
     private static final int ACTIVITY_CREATE=0;
     private static final int ACTIVITY_EDIT=1;
 
@@ -37,18 +39,20 @@ public class KitchenMaster extends AppCompatActivity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	Log.e(TAG, "entered onCreate");
+        Log.e(TAG, "entered onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kitchen_master);
         mDbHelper = new ItemsDbAdapter(this);
         mDbHelper.open();
         fillData();
 //        registerForContextMenu(getListView());
+
+//        listView.setOnClickListener(this);
         Log.e(TAG, "success onCreate");
     }
 
     private void fillData() {
-    	Log.e(TAG, "entered fillData");
+        Log.e(TAG, "entered fillData");
 
         Cursor itemsCursor = mDbHelper.fetchAllItems();
 
@@ -60,7 +64,9 @@ public class KitchenMaster extends AppCompatActivity {
                 items.add(new Entry(itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME)),
                         itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY)),
                         itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY))));
-                Log.e(TAG, "added " + ItemsDbAdapter.KEY_NAME + " item");
+                Log.e(TAG, "added " + itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME))
+                        + " item with inventory " + itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY))
+                        + " and to buy " + itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY)));
 
             }while(itemsCursor.moveToNext());
         }
@@ -95,7 +101,7 @@ public class KitchenMaster extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-    	Log.e(TAG, "entered onCreateOptionsMenu");
+        Log.e(TAG, "entered onCreateOptionsMenu");
         super.onCreateOptionsMenu(menu);
         menu.add(0, INSERT_ID, 0, R.string.menu_insert);
         //new menu option to pull up the Shopping List
@@ -106,7 +112,7 @@ public class KitchenMaster extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    	Log.e(TAG, "entered onMenuItemSelected");
+        Log.e(TAG, "entered onMenuItemSelected");
         switch(item.getItemId()) {
             case INSERT_ID:
                 createItem();
@@ -118,7 +124,7 @@ public class KitchenMaster extends AppCompatActivity {
         Log.e(TAG, "finished onMenuItemSelected");
         return super.onOptionsItemSelected(item);
     }
-//
+    //
 //    @Override
 //    public void onCreateContextMenu(ContextMenu menu, View v,
 //            ContextMenuInfo menuInfo) {
@@ -143,7 +149,7 @@ public class KitchenMaster extends AppCompatActivity {
 //    }
 //
     private void createItem() {
-    	Log.e(TAG, "entered createItem");
+        Log.e(TAG, "entered createItem");
         Intent i = new Intent(this, ItemEdit.class);
         startActivityForResult(i, ACTIVITY_CREATE);
         Log.e(TAG, "finished createItem");
@@ -171,11 +177,21 @@ public class KitchenMaster extends AppCompatActivity {
 //    }
 //
 //    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-//    	Log.e(TAG, "entered onActivityResult");
-//    	super.onActivityResult(requestCode, resultCode, intent);
-//        fillData();
-//        Log.e(TAG, "finished onActivityResult");
+//    public void onClick (View v) {
+//        if (v.getId() == R.id.text_name){
+//            Intent i = new Intent(this, ItemEdit.class);
+//            i.putExtra(ItemsDbAdapter.KEY_ROWID, id);
+//
+//            startActivityForResult(i, ACTIVITY_EDIT);
+//        }
+//
 //    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    	Log.e(TAG, "entered onActivityResult");
+    	super.onActivityResult(requestCode, resultCode, intent);
+        fillData();
+        Log.e(TAG, "finished onActivityResult");
+    }
 }
 
