@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 public class KitchenMaster extends AppCompatActivity {
@@ -61,7 +62,8 @@ public class KitchenMaster extends AppCompatActivity {
 
         if(itemsCursor.moveToFirst()){
             do{
-                items.add(new Entry(itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME)),
+                items.add(new Entry(itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_ROWID)),
+                        itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME)),
                         itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY)),
                         itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY))));
                 Log.e(TAG, "added " + itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME))
@@ -78,6 +80,27 @@ public class KitchenMaster extends AppCompatActivity {
         // the following two lines are replacements for commented out code
         listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                //Here you can get the position and access your
+                //TicketList Object
+                Log.e(TAG, "inside setOnItemClickListener");
+                Entry e = (Entry) adapterView.getItemAtPosition(position);
+                String rowid = e.getId();
+                Toast.makeText(getApplicationContext(),
+                        "Clicked on position " + position + ", id = " + id + ", obj - " + rowid,
+                        Toast.LENGTH_LONG).show();
+
+                Intent i = new Intent(KitchenMaster.this, ItemEdit.class);
+                i.putExtra(ItemsDbAdapter.KEY_ROWID, Long.parseLong(rowid));
+
+                startActivityForResult(i, ACTIVITY_EDIT);
+
+            }
+        });
+
 
 
         // Old Method Below
@@ -103,6 +126,9 @@ public class KitchenMaster extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.e(TAG, "entered onCreateOptionsMenu");
         super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        // this adds the ToolBar on top of the app with menu items from options_menu.xml
+        inflater.inflate(R.menu.main_menu, menu);
         menu.add(0, INSERT_ID, 0, R.string.menu_insert);
         //new menu option to pull up the Shopping List
         menu.add(0, SHOP_LIST_ID, 0, R.string.shop_list);
@@ -120,6 +146,10 @@ public class KitchenMaster extends AppCompatActivity {
             case SHOP_LIST_ID:
 //                openShopList();
                 return true;
+        }
+        if(item.getTitle().equals("Search")) {
+            Toast.makeText(getApplicationContext(), "Search = " + onSearchRequested(), Toast.LENGTH_LONG).show();
+            return onSearchRequested();
         }
         Log.e(TAG, "finished onMenuItemSelected");
         return super.onOptionsItemSelected(item);
@@ -186,6 +216,7 @@ public class KitchenMaster extends AppCompatActivity {
 //        }
 //
 //    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
     	Log.e(TAG, "entered onActivityResult");

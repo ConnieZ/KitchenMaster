@@ -13,4 +13,5 @@
     <string name="header_buyqty">Buy</string>
     <string name="bought">BOUGHT</string>
     <string name="shop_list">Shopping List</string>
+    <string name="search_title">Search</string>
 </resources>

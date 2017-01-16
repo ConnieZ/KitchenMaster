@@ -126,13 +126,13 @@ public class ItemsDbAdapter {
      * @throws SQLException if item could not be found/retrieved
      */
     public Cursor fetchItem(long rowId) throws SQLException {
-
+        Log.e(TAG, "inside fetchItem");
         Cursor mCursor =
 
                 mDb.query(true, DATABASE_TABLE, new String[] {KEY_ROWID,
                                 KEY_NAME, KEY_INVQTY, KEY_BUYQTY}, KEY_ROWID + "=" + rowId, null,
                         null, null, null, null);
-        if (mCursor != null) {
+        if (mCursor.moveToFirst()) {
             mCursor.moveToFirst();
         }
         return mCursor;
