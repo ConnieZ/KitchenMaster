@@ -1,10 +1,13 @@
 package com.conniezlabs.kitchenmaster;
 
 import android.app.ListActivity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -133,12 +136,28 @@ public class KitchenMaster extends AppCompatActivity {
         //new menu option to pull up the Shopping List
         menu.add(0, SHOP_LIST_ID, 0, R.string.shop_list);
         Log.e(TAG, "finished onCreateOptionsMenu");
+
+//        // Associate searchable configuration with the SearchView
+//        SearchManager searchManager =
+//                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//        // R.id.search is pulled by id from options_menu.xml, where there could be other menu items.
+//        SearchView searchView =
+//                (SearchView) menu.findItem(R.id.search).getActionView();
+//        // The SearchView attempts to start an activity with the ACTION_SEARCH when a user submits a search query.
+//        // A searchable activity filters for the ACTION_SEARCH intent and searches for the query in some sort of data set.
+//        searchView.setSearchableInfo(
+//                searchManager.getSearchableInfo(getComponentName()));
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.e(TAG, "entered onMenuItemSelected");
+        if(item.getTitle().equals("Search")) {
+            Toast.makeText(getApplicationContext(), "Search = " + onSearchRequested(), Toast.LENGTH_LONG).show();
+            return onSearchRequested();
+        }
         switch(item.getItemId()) {
             case INSERT_ID:
                 createItem();
@@ -147,10 +166,7 @@ public class KitchenMaster extends AppCompatActivity {
 //                openShopList();
                 return true;
         }
-        if(item.getTitle().equals("Search")) {
-            Toast.makeText(getApplicationContext(), "Search = " + onSearchRequested(), Toast.LENGTH_LONG).show();
-            return onSearchRequested();
-        }
+
         Log.e(TAG, "finished onMenuItemSelected");
         return super.onOptionsItemSelected(item);
     }

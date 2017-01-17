@@ -84,6 +84,10 @@
         "source": "C:\\Users\\connie_zest\\StudioProjects\\KitchenMaster\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout\\abc_alert_dialog_title_material.xml"
     },
     {
+        "merged": "C:\\Users\\connie_zest\\StudioProjects\\KitchenMaster\\app\\build\\intermediates\\res\\merged\\debug\\layout\\search_layout.xml",
+        "source": "C:\\Users\\connie_zest\\StudioProjects\\KitchenMaster\\app\\src\\main\\res\\layout\\search_layout.xml"
+    },
+    {
         "merged": "C:\\Users\\connie_zest\\StudioProjects\\KitchenMaster\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_popup_menu_item_layout.xml",
         "source": "C:\\Users\\connie_zest\\StudioProjects\\KitchenMaster\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.1.0\\res\\layout\\abc_popup_menu_item_layout.xml"
     },

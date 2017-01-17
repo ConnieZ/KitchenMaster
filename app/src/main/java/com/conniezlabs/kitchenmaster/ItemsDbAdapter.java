@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.security.Key;
 
 /**
  * Simple items database access helper class. Defines the basic CRUD operations
@@ -131,6 +132,29 @@ public class ItemsDbAdapter {
 
                 mDb.query(true, DATABASE_TABLE, new String[] {KEY_ROWID,
                                 KEY_NAME, KEY_INVQTY, KEY_BUYQTY}, KEY_ROWID + "=" + rowId, null,
+                        null, null, null, null);
+        if (mCursor.moveToFirst()) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+
+
+    /**
+     * Return a Cursor positioned at the item that matches the given rowId
+     *
+     * @param rowId id of item to retrieve
+     * @return Cursor positioned to matching item, if found
+     * @throws SQLException if item could not be found/retrieved
+     */
+    public Cursor fetchItem(String name) throws SQLException {
+        Log.e(TAG, "inside fetchItem");
+        Cursor mCursor =
+
+                mDb.query(true, DATABASE_TABLE, new String[] {KEY_ROWID,
+                                KEY_NAME, KEY_INVQTY, KEY_BUYQTY},
+                        "tolower(" + KEY_NAME + ") like tolower('" + name + "%')", null,
                         null, null, null, null);
         if (mCursor.moveToFirst()) {
             mCursor.moveToFirst();

@@ -360,6 +360,7 @@
     <string name="menu_insert">Add Item</string>
     <string name="name">Item Name</string>
     <string name="no_items">No Items Yet</string>
+    <string name="search_hint">Enter item</string>
     <string name="search_menu_title">Search</string>
     <string name="search_title">Search</string>
     <string name="shop_list">Shopping List</string>
