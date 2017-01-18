@@ -34,6 +34,7 @@ public class KitchenMaster extends AppCompatActivity {
 
     private static final int INSERT_ID = Menu.FIRST;
     private static final int SHOP_LIST_ID = Menu.NONE;
+    private static final int SEARCH = Menu.FIRST + 2;
     private static final int DELETE_ID = Menu.FIRST + 1;
 
     private ItemsDbAdapter mDbHelper;
@@ -153,9 +154,9 @@ public class KitchenMaster extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.e(TAG, "entered onMenuItemSelected");
+        Log.e(TAG, "entered onOptionsItemSelected");
         if(item.getTitle().equals("Search")) {
-            Toast.makeText(getApplicationContext(), "Search = " + onSearchRequested(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Search = "+onSearchRequested(), Toast.LENGTH_LONG).show();
             return onSearchRequested();
         }
         switch(item.getItemId()) {

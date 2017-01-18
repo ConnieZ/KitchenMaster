@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
@@ -19,7 +20,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class SearchableActivity extends ListActivity {
+public class SearchableActivity extends AppCompatActivity {
 
     private static final String TAG = "SearchableActivity";
     ListView listView;
@@ -32,7 +33,8 @@ public class SearchableActivity extends ListActivity {
         Log.e(TAG, "Started Searchable onCreate");
         mDbHelper.open();
         // The following is for Search Functionality
-        handleIntent(getIntent());
+        Intent intent = getIntent();
+        handleIntent(intent);
 
         // for testing only
         setContentView(R.layout.search_layout);
@@ -53,8 +55,11 @@ public class SearchableActivity extends ListActivity {
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
+            Log.e(TAG, "inside Searchable handleIntent - got string extra");
+
             //use the query to search your data somehow
             Cursor c = mDbHelper.fetchItem(query);
+            Log.e(TAG, "inside Searchable handleIntent - fetched item");
 
             //sanity check - did we find any items?
             if(c.getCount() > 0) {
@@ -63,7 +68,7 @@ public class SearchableActivity extends ListActivity {
             }
 
             //process Cursor and display results
-            fillData(c);
+            //fillData(c);
         }
     }
 
@@ -88,7 +93,7 @@ public class SearchableActivity extends ListActivity {
         c.close();
 
         EntryAdapter adapter = new EntryAdapter(SearchableActivity.this, items);
-        setListAdapter(adapter);
+        //setListAdapter(adapter);
 
         Log.e(TAG, "finished fillData");
     }
