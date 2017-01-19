@@ -105,25 +105,7 @@ public class KitchenMaster extends AppCompatActivity {
             }
         });
 
-
-
-        // Old Method Below
-//    	// Get all of the rows from the database and create the item list
-//        Cursor itemsCursor = mDbHelper.fetchAllItems();
-//        startManagingCursor(itemsCursor);
-//
-//        // Create an array to specify the fields we want to display in the list
-//        String[] from = new String[]{ItemsDbAdapter.KEY_NAME, ItemsDbAdapter.KEY_INVQTY, ItemsDbAdapter.KEY_BUYQTY};
-//
-//        // and an array of the text fields we want to bind those db fields to
-//        int[] to = new int[]{R.id.text_name, R.id.text_invqty, R.id.text_buyqty};
-//
-//        // Now create a simple cursor adapter and set it to display
-//        SimpleCursorAdapter items =
-//            new SimpleCursorAdapter(this, R.layout.item_row, itemsCursor, from, to);
-//        setListAdapter(items);
-//
-        Log.e(TAG, "finished fillData");
+       Log.e(TAG, "finished fillData");
     }
 
     @Override
@@ -164,7 +146,7 @@ public class KitchenMaster extends AppCompatActivity {
                 createItem();
                 return true;
             case SHOP_LIST_ID:
-//                openShopList();
+                openShopList();
                 return true;
         }
 
@@ -181,34 +163,34 @@ public class KitchenMaster extends AppCompatActivity {
 //        Log.e(TAG, "finished onCreateContextMenu");
 //    }
 //
-//    @Override
-//    public boolean onContextItemSelected(MenuItem item) {
-//        switch(item.getItemId()) {
-//            case DELETE_ID:
-//            	Log.e(TAG, "entered onContextItemSelected");
-//                AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-//                mDbHelper.deleteItem(info.id);
-//                fillData();
-//                return true;
-//        }
-//        Log.e(TAG, "finished onContextItemSelected");
-//        return super.onContextItemSelected(item);
-//    }
-//
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case DELETE_ID:
+            	Log.e(TAG, "entered onContextItemSelected");
+                AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+                mDbHelper.deleteItem(info.id);
+                fillData();
+                return true;
+        }
+        Log.e(TAG, "finished onContextItemSelected");
+        return super.onContextItemSelected(item);
+    }
+
     private void createItem() {
         Log.e(TAG, "entered createItem");
         Intent i = new Intent(this, ItemEdit.class);
         startActivityForResult(i, ACTIVITY_CREATE);
         Log.e(TAG, "finished createItem");
     }
-//
-//    //call to activity that will open shopping list
-//    private void openShopList() {
-//    	Log.e(TAG, "entered openShopList");
-//        Intent i = new Intent(this, ShoppingList.class);
-//        startActivity(i);
-//        Log.e(TAG, "finished openShopList");
-//    }
+
+    //call to activity that will open shopping list
+    private void openShopList() {
+    	Log.e(TAG, "entered openShopList");
+        Intent i = new Intent(this, ShoppingList.class);
+        startActivity(i);
+        Log.e(TAG, "finished openShopList");
+    }
 //
 //
 //    @Override

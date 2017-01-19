@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
@@ -20,7 +19,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class SearchableActivity extends AppCompatActivity {
+public class SearchableActivity extends ListActivity {
 
     private static final String TAG = "SearchableActivity";
     ListView listView;
@@ -33,8 +32,7 @@ public class SearchableActivity extends AppCompatActivity {
         Log.e(TAG, "Started Searchable onCreate");
         mDbHelper.open();
         // The following is for Search Functionality
-        Intent intent = getIntent();
-        handleIntent(intent);
+        handleIntent(getIntent());
 
         // for testing only
         setContentView(R.layout.search_layout);
