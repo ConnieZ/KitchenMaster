@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme" >
         <meta-data
             android:name="android.app.default_searchable"
-            android:value=".SearchableActivity" />
+            android:value="com.conniezlabs.kitchenmaster.SearchableActivity" />
 
         <activity
             android:name="com.conniezlabs.kitchenmaster.KitchenMaster"

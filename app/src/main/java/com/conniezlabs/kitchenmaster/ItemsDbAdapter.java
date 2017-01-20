@@ -127,7 +127,7 @@ public class ItemsDbAdapter {
      * @throws SQLException if item could not be found/retrieved
      */
     public Cursor fetchItem(long rowId) throws SQLException {
-        Log.e(TAG, "inside fetchItem");
+        Log.e(TAG, "inside fetchItem by id");
         Cursor mCursor =
 
                 mDb.query(true, DATABASE_TABLE, new String[] {KEY_ROWID,
@@ -144,17 +144,17 @@ public class ItemsDbAdapter {
     /**
      * Return a Cursor positioned at the item that matches the given rowId
      *
-     * @param rowId id of item to retrieve
+     * @param name name of item to retrieve
      * @return Cursor positioned to matching item, if found
      * @throws SQLException if item could not be found/retrieved
      */
     public Cursor fetchItem(String name) throws SQLException {
-        Log.e(TAG, "inside fetchItem");
+        Log.e(TAG, "inside fetchItem by name");
         Cursor mCursor =
 
                 mDb.query(true, DATABASE_TABLE, new String[] {KEY_ROWID,
                                 KEY_NAME, KEY_INVQTY, KEY_BUYQTY},
-                        "tolower(" + KEY_NAME + ") like tolower('" + name + "%')", null,
+                        "lower(" + KEY_NAME + ") like lower('" + name + "%')", null,
                         null, null, null, null);
         if (mCursor.moveToFirst()) {
             mCursor.moveToFirst();
@@ -214,7 +214,7 @@ public class ItemsDbAdapter {
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(DATABASE_CREATE);
-//            loadInitialItems();
+            //loadInitialItems();
             mDatabase = db;
         }
 
@@ -266,7 +266,7 @@ public class ItemsDbAdapter {
 //
 //            return mDatabase.insert(DATABASE_TABLE, null, initialValues);
 //        }
-
+//
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             Log.w(TAG, "Upgrading database from version " + oldVersion + " to "

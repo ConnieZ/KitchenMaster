@@ -111,13 +111,15 @@ public class ItemEdit extends Activity {
         String invqty = mInvQtyText.getText().toString();
         String buyqty = mBuyQtyText.getText().toString();
 
-        if (mRowId == null) {
+        if (mRowId == null & name != null & name.length() > 0) {
             long id = mDbHelper.createItem(name, invqty, buyqty);
             if (id > 0) {
                 mRowId = id;
             }
-        } else {
+        } else if (mRowId != null) {
             mDbHelper.updateItem(mRowId, name, invqty, buyqty);
+        } else {
+            // do nothing
         }
         Log.e(TAG, "finished saveState");
     }

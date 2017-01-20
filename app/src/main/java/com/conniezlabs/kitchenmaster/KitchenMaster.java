@@ -138,6 +138,7 @@ public class KitchenMaster extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.e(TAG, "entered onOptionsItemSelected");
         if(item.getTitle().equals("Search")) {
+            //Intent i = new Intent(Intent.ACTION_SEARCH);
             Toast.makeText(getApplicationContext(), "Search = "+onSearchRequested(), Toast.LENGTH_LONG).show();
             return onSearchRequested();
         }
@@ -153,16 +154,16 @@ public class KitchenMaster extends AppCompatActivity {
         Log.e(TAG, "finished onMenuItemSelected");
         return super.onOptionsItemSelected(item);
     }
-    //
-//    @Override
-//    public void onCreateContextMenu(ContextMenu menu, View v,
-//            ContextMenuInfo menuInfo) {
-//    	Log.e(TAG, "entered onCreateContextMenu");
-//        super.onCreateContextMenu(menu, v, menuInfo);
-//        menu.add(0, DELETE_ID, 0, R.string.menu_delete);
-//        Log.e(TAG, "finished onCreateContextMenu");
-//    }
-//
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+            ContextMenuInfo menuInfo) {
+    	Log.e(TAG, "entered onCreateContextMenu");
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.add(0, DELETE_ID, 0, R.string.menu_delete);
+        Log.e(TAG, "finished onCreateContextMenu");
+    }
+
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch(item.getItemId()) {

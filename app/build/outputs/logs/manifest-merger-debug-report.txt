@@ -37,9 +37,9 @@ MERGED from [com.android.support:support-compat:25.1.0] C:\Users\connie_zest\Stu
 	android:theme
 		ADDED from C:\Users\connie_zest\StudioProjects\KitchenMaster\app\src\main\AndroidManifest.xml:11:9-40
 meta-data#android.app.default_searchable
-ADDED from C:\Users\connie_zest\StudioProjects\KitchenMaster\app\src\main\AndroidManifest.xml:12:9-14:51
+ADDED from C:\Users\connie_zest\StudioProjects\KitchenMaster\app\src\main\AndroidManifest.xml:12:9-14:80
 	android:value
-		ADDED from C:\Users\connie_zest\StudioProjects\KitchenMaster\app\src\main\AndroidManifest.xml:14:13-48
+		ADDED from C:\Users\connie_zest\StudioProjects\KitchenMaster\app\src\main\AndroidManifest.xml:14:13-77
 	android:name
 		ADDED from C:\Users\connie_zest\StudioProjects\KitchenMaster\app\src\main\AndroidManifest.xml:13:13-58
 activity#com.conniezlabs.kitchenmaster.KitchenMaster

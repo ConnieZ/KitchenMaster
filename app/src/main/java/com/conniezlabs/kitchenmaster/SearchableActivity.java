@@ -3,6 +3,8 @@ package com.conniezlabs.kitchenmaster;
 // http://www.androiddesignpatterns.com/2012/07/understanding-loadermanager.html
 // https://developer.android.com/training/search/index.html
 // https://inducesmile.com/android/android-search-dialog-implementation-example/
+// Most helpful tool to fix non-clickable search widget:
+// http://stackoverflow.com/questions/17311434/search-dialog-is-not-called-onsearchrequested
 
 import android.app.ListActivity;
 import android.app.SearchManager;
@@ -14,6 +16,7 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -23,8 +26,8 @@ public class SearchableActivity extends ListActivity {
 
     private static final String TAG = "SearchableActivity";
     ListView listView;
-    private ItemsDbAdapter mDbHelper = new ItemsDbAdapter(this);;
-
+    private ItemsDbAdapter mDbHelper = new ItemsDbAdapter(this);
+    private static final int ACTIVITY_EDIT=1;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -34,13 +37,13 @@ public class SearchableActivity extends ListActivity {
         // The following is for Search Functionality
         handleIntent(getIntent());
 
-        // for testing only
         setContentView(R.layout.search_layout);
 
         }
 
     @Override
     protected void onNewIntent(Intent intent) {
+        Log.e(TAG, "inside onNewIntent");
 
         handleIntent(intent);
     }
@@ -55,7 +58,7 @@ public class SearchableActivity extends ListActivity {
             String query = intent.getStringExtra(SearchManager.QUERY);
             Log.e(TAG, "inside Searchable handleIntent - got string extra");
 
-            //use the query to search your data somehow
+            //use the query to search the data somehow
             Cursor c = mDbHelper.fetchItem(query);
             Log.e(TAG, "inside Searchable handleIntent - fetched item");
 
@@ -66,7 +69,7 @@ public class SearchableActivity extends ListActivity {
             }
 
             //process Cursor and display results
-            //fillData(c);
+            fillData(c);
         }
     }
 
@@ -91,7 +94,7 @@ public class SearchableActivity extends ListActivity {
         c.close();
 
         EntryAdapter adapter = new EntryAdapter(SearchableActivity.this, items);
-        //setListAdapter(adapter);
+        setListAdapter(adapter);
 
         Log.e(TAG, "finished fillData");
     }
@@ -115,5 +118,25 @@ public class SearchableActivity extends ListActivity {
 
         return true;
     }
+
+//    @Override
+//    protected void onListItemClick(ListView l, View v, int position, long id) {
+//        Log.e(TAG, "entered onListItemClick");
+//        super.onListItemClick(l, v, position, id);
+//
+//        Intent i = new Intent(this, ItemEdit.class);
+//        i.putExtra(ItemsDbAdapter.KEY_ROWID, id);
+//
+//        startActivityForResult(i, ACTIVITY_EDIT);
+//        Log.e(TAG, "finished onListItemClick");
+//    }
+//
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+//        Log.e(TAG, "entered onActivityResult");
+//        super.onActivityResult(requestCode, resultCode, intent);
+//        //fillListRows();
+//        Log.e(TAG, "finished onActivityResult");
+//    }
 
 }
