@@ -119,24 +119,5 @@ public class SearchableActivity extends ListActivity {
         return true;
     }
 
-//    @Override
-//    protected void onListItemClick(ListView l, View v, int position, long id) {
-//        Log.e(TAG, "entered onListItemClick");
-//        super.onListItemClick(l, v, position, id);
-//
-//        Intent i = new Intent(this, ItemEdit.class);
-//        i.putExtra(ItemsDbAdapter.KEY_ROWID, id);
-//
-//        startActivityForResult(i, ACTIVITY_EDIT);
-//        Log.e(TAG, "finished onListItemClick");
-//    }
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-//        Log.e(TAG, "entered onActivityResult");
-//        super.onActivityResult(requestCode, resultCode, intent);
-//        //fillListRows();
-//        Log.e(TAG, "finished onActivityResult");
-//    }
 
 }

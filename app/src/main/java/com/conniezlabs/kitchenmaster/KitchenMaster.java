@@ -1,13 +1,12 @@
 package com.conniezlabs.kitchenmaster;
 
-import android.app.ListActivity;
 import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -18,13 +17,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
+import android.app.SearchManager;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 
 import java.util.ArrayList;
 public class KitchenMaster extends AppCompatActivity {
-
-//public class KitchenMaster extends AppCompatActivity implements View.OnClickListener{
 
     //for logging and debugging
     private static final String TAG = "KitchenMaster-Main";
@@ -34,7 +33,6 @@ public class KitchenMaster extends AppCompatActivity {
 
     private static final int INSERT_ID = Menu.FIRST;
     private static final int SHOP_LIST_ID = Menu.NONE;
-    private static final int SEARCH = Menu.FIRST + 2;
     private static final int DELETE_ID = Menu.FIRST + 1;
 
     private ItemsDbAdapter mDbHelper;
@@ -50,10 +48,42 @@ public class KitchenMaster extends AppCompatActivity {
         mDbHelper = new ItemsDbAdapter(this);
         mDbHelper.open();
         fillData();
-//        registerForContextMenu(getListView());
 
-//        listView.setOnClickListener(this);
+        // The following is for Search Functionality
+        handleIntent(getIntent());
         Log.e(TAG, "success onCreate");
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Log.e(TAG, "inside onNewIntent");
+
+        handleIntent(intent);
+    }
+
+
+
+    // One of the methods for search functionality, this will handle the Search intent
+    private void handleIntent(Intent intent) {
+        Log.e(TAG, "inside Searchable handleIntent");
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Log.e(TAG, "inside Searchable handleIntent - got string extra");
+
+            //use the query to search the data somehow
+            Cursor c = mDbHelper.fetchItem(query);
+            Log.e(TAG, "inside Searchable handleIntent - fetched item");
+
+            //sanity check - did we find any items?
+            if(c.getCount() > 0) {
+                Toast.makeText(getApplicationContext(), query + " found " + c.getCount() + " items",
+                        Toast.LENGTH_LONG).show();
+            }
+
+            //process Cursor and display results
+            fillData(c);
+        }
     }
 
     private void fillData() {
@@ -89,7 +119,6 @@ public class KitchenMaster extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 //Here you can get the position and access your
-                //TicketList Object
                 Log.e(TAG, "inside setOnItemClickListener");
                 Entry e = (Entry) adapterView.getItemAtPosition(position);
                 String rowid = e.getId();
@@ -108,6 +137,30 @@ public class KitchenMaster extends AppCompatActivity {
        Log.e(TAG, "finished fillData");
     }
 
+    private void fillData(Cursor c) {
+        Log.e(TAG, "entered fillData");
+
+        ArrayList<Entry> items = new ArrayList<Entry>();
+        if(c.moveToFirst()){
+            do{
+                items.add(new Entry(c.getString(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_ROWID)),
+                        c.getString(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME)),
+                        c.getString(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY)),
+                        c.getString(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY))));
+                Log.e(TAG, "added " + c.getString(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME))
+                        + " item with inventory " + c.getString(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY))
+                        + " and to buy " + c.getString(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY)));
+
+            }while(c.moveToNext());
+        }
+        c.close();
+
+        EntryAdapter adapter = new EntryAdapter(this, items);
+        listView.setAdapter(adapter);
+
+        Log.e(TAG, "finished fillData");
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.e(TAG, "entered onCreateOptionsMenu");
@@ -120,25 +173,19 @@ public class KitchenMaster extends AppCompatActivity {
         menu.add(0, SHOP_LIST_ID, 0, R.string.shop_list);
         Log.e(TAG, "finished onCreateOptionsMenu");
 
-//        // Associate searchable configuration with the SearchView
-//        SearchManager searchManager =
-//                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-//        // R.id.search is pulled by id from options_menu.xml, where there could be other menu items.
-//        SearchView searchView =
-//                (SearchView) menu.findItem(R.id.search).getActionView();
-//        // The SearchView attempts to start an activity with the ACTION_SEARCH when a user submits a search query.
-//        // A searchable activity filters for the ACTION_SEARCH intent and searches for the query in some sort of data set.
-//        searchView.setSearchableInfo(
-//                searchManager.getSearchableInfo(getComponentName()));
-
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(getApplicationContext(), KitchenMaster.class)));
         return true;
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.e(TAG, "entered onOptionsItemSelected");
         if(item.getTitle().equals("Search")) {
-            //Intent i = new Intent(Intent.ACTION_SEARCH);
             Toast.makeText(getApplicationContext(), "Search = "+onSearchRequested(), Toast.LENGTH_LONG).show();
             return onSearchRequested();
         }
@@ -189,33 +236,9 @@ public class KitchenMaster extends AppCompatActivity {
     private void openShopList() {
     	Log.e(TAG, "entered openShopList");
         Intent i = new Intent(this, ShoppingList.class);
-        startActivity(i);
+        startActivityForResult(i, SHOP_LIST_ID);
         Log.e(TAG, "finished openShopList");
     }
-//
-//
-//    @Override
-//    protected void onListItemClick(ListView l, View v, int position, long id) {
-//    	Log.e(TAG, "entered onListItemClick");
-//    	super.onListItemClick(l, v, position, id);
-//
-//        Intent i = new Intent(this, ItemEdit.class);
-//        i.putExtra(ItemsDbAdapter.KEY_ROWID, id);
-//
-//        startActivityForResult(i, ACTIVITY_EDIT);
-//        Log.e(TAG, "finished onListItemClick");
-//    }
-//
-//    @Override
-//    public void onClick (View v) {
-//        if (v.getId() == R.id.text_name){
-//            Intent i = new Intent(this, ItemEdit.class);
-//            i.putExtra(ItemsDbAdapter.KEY_ROWID, id);
-//
-//            startActivityForResult(i, ACTIVITY_EDIT);
-//        }
-//
-//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {

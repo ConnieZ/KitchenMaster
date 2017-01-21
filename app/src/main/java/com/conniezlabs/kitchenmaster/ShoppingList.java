@@ -52,7 +52,8 @@ public class ShoppingList extends ListActivity {
         		//call to update the rows of data in database after shopping is done
         		updateInventory();
         		//finish the activity
-        		finish();
+                setResult(RESULT_OK);
+                finish();
         	}
         });
 
@@ -169,12 +170,6 @@ public class ShoppingList extends ListActivity {
         Log.e(TAG, "finished createItem");
     }
 
-    private void openShopList() {
-    	Log.e(TAG, "entered openShopList");
-        Intent i = new Intent(this, ShoppingList.class);
-        startActivity(i);
-        Log.e(TAG, "finished openShopList");
-    }
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {

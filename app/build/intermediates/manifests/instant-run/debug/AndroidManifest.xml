@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme" >
         <meta-data
             android:name="android.app.default_searchable"
-            android:value="com.conniezlabs.kitchenmaster.SearchableActivity" />
+            android:value="com.conniezlabs.kitchenmaster.KitchenMaster" />
 
         <activity
             android:name="com.conniezlabs.kitchenmaster.KitchenMaster"
@@ -26,20 +26,19 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name="com.conniezlabs.kitchenmaster.ItemEdit" />
-        <activity
-            android:name="com.conniezlabs.kitchenmaster.ShoppingList"
-            android:label="@string/shop_list" />
-        <activity android:name="com.conniezlabs.kitchenmaster.SearchableActivity" >
-            <intent-filter>
+
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
+        </activity>
+        <activity android:name="com.conniezlabs.kitchenmaster.ItemEdit" />
+        <activity
+            android:name="com.conniezlabs.kitchenmaster.ShoppingList"
+            android:label="@string/shop_list" />
+        <activity android:name="com.conniezlabs.kitchenmaster.SearchableActivity" >
         </activity>
     </application>
 
