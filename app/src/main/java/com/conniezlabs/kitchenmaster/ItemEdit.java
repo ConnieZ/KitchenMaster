@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class ItemEdit extends Activity {
     //for logging and debugging
@@ -112,9 +113,14 @@ public class ItemEdit extends Activity {
         String buyqty = mBuyQtyText.getText().toString();
 
         if (mRowId == null & name != null & name.length() > 0) {
-            long id = mDbHelper.createItem(name, invqty, buyqty);
-            if (id > 0) {
-                mRowId = id;
+            if(mDbHelper.fetchItem(name.toLowerCase()).moveToFirst()){
+                // Warn the user that the item already exists and won't be duplicated
+                Toast.makeText(getApplicationContext(), name + " item already exists.", Toast.LENGTH_LONG).show();
+            } else{
+                long id = mDbHelper.createItem(name.toLowerCase(), invqty, buyqty);
+                if (id > 0) {
+                    mRowId = id;
+                }
             }
         } else if (mRowId != null) {
             mDbHelper.updateItem(mRowId, name, invqty, buyqty);

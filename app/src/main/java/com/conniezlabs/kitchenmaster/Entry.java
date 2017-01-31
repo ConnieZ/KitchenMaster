@@ -11,9 +11,7 @@ public class Entry {
         this.name = name;
         this.inv_qty = inv_qty;
         this.buy_qty = buy_qty;
-
     }
-
 
     public Entry(String id, String name, String inv_qty, String buy_qty) {
         this.id = id;

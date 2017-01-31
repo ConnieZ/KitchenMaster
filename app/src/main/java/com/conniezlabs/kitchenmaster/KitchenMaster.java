@@ -45,11 +45,20 @@ public class KitchenMaster extends AppCompatActivity {
         Log.e(TAG, "entered onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kitchen_master);
+
+        // trying to display the logo
+
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        getSupportActionBar().setDisplayUseLogoEnabled(true);
+
+
+
         mDbHelper = new ItemsDbAdapter(this);
         mDbHelper.open();
         fillData();
 
         // The following is for Search Functionality
+        // Handle the Search intent when received
         handleIntent(getIntent());
         Log.e(TAG, "success onCreate");
     }
@@ -62,12 +71,17 @@ public class KitchenMaster extends AppCompatActivity {
     }
 
 
-
-    // One of the methods for search functionality, this will handle the Search intent
+    /**
+     * One of the methods for search functionality.
+     * This will handle the Search intent
+     * @param intent - intent received for this activity
+     */
     private void handleIntent(Intent intent) {
         Log.e(TAG, "inside Searchable handleIntent");
 
+        // If the intent is ACTION_SEARCH as expected
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            // Get the search query
             String query = intent.getStringExtra(SearchManager.QUERY);
             Log.e(TAG, "inside Searchable handleIntent - got string extra");
 

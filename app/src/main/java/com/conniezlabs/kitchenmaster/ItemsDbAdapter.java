@@ -24,13 +24,13 @@ import java.security.Key;
  *
  */
 public class ItemsDbAdapter {
+    private static final String TAG = "ItemsDbAdapter";
 
     public static final String KEY_NAME = "name";
     public static final String KEY_INVQTY = "invqty";
     public static final String KEY_BUYQTY = "buyqty";
     public static final String KEY_ROWID = "_id";
 
-    private static final String TAG = "ItemsDbAdapter";
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
 
@@ -142,7 +142,7 @@ public class ItemsDbAdapter {
 
 
     /**
-     * Return a Cursor positioned at the item that matches the given rowId
+     * Return a Cursor positioned at the item that matches the given name
      *
      * @param name name of item to retrieve
      * @return Cursor positioned to matching item, if found
@@ -198,8 +198,9 @@ public class ItemsDbAdapter {
     }
 
 
-    /*
-     * Helper class
+    /**
+     * Helper class that is used to create the database object, which is then used by
+     * other classes in the app.
      */
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
