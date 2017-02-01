@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">KitchenMaster</string>
+    <string name="app_name">Kitchen Master</string>
     <string name="no_items">No Items Yet</string>
     <string name="menu_insert">Add Item</string>
     <string name="menu_delete">Delete Item</string>

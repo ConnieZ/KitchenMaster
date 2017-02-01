@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -215,58 +216,62 @@ public class ItemsDbAdapter {
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(DATABASE_CREATE);
-            //loadInitialItems();
             mDatabase = db;
+            loadInitialItems();
+
         }
 
 
-//        private void loadInitialItems() {
-//            Log.e(TAG, "inside loadInitialItems");
-////            new Thread(new Runnable() {
-////                public void run() {
-//            try {
-//                loadItems();
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-////                }
-////            }).start();
-//        }
-//
-//        private void loadItems() throws IOException {
-//            Log.e(TAG, "inside loadItems");
-//
-//            final Resources resources = mHelperContext.getResources();
-//            InputStream inputStream = resources.openRawResource(R.raw.initial_items);
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-//
-//            try {
-//                String line;
-//                while ((line = reader.readLine()) != null) {
-//                    Log.e(TAG, "inside loadItems, reading line: " + line);
-//
-//                    String[] strings = TextUtils.split(line, "-");
-//                    if (strings.length < 2) continue;
-//                    long id = addItem(strings);
-//                    if (id < 0) {
-//                        Log.e(TAG, "unable to add word: " + strings[0].trim());
-//                    }
+        private void loadInitialItems() {
+            Log.e(TAG, "inside loadInitialItems");
+//            new Thread(new Runnable() {
+//                public void run() {
+            try {
+                loadItems();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 //                }
-//            } finally {
-//                reader.close();
-//            }
-//        }
-//
-//        public long addItem(String[] strings) {
-//            Log.e(TAG, "inside addItem");
-//
-//            ContentValues initialValues = new ContentValues();
-//            initialValues.put(KEY_NAME, strings[0].trim());
-//            initialValues.put(KEY_INVQTY, strings[1].trim());
-//            initialValues.put(KEY_BUYQTY, "0");
-//
-//            return mDatabase.insert(DATABASE_TABLE, null, initialValues);
-//        }
+//            }).start();
+        }
+
+        private void loadItems() throws IOException {
+            Log.e(TAG, "inside loadItems");
+
+            final Resources resources = mHelperContext.getResources();
+            InputStream inputStream = resources.openRawResource(R.raw.initial_items);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+            try {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    Log.e(TAG, "inside loadItems, reading line: " + line);
+
+                    String[] strings = TextUtils.split(line, ",");
+                    if (strings.length < 2) continue;
+                    long id = addItem(strings);
+                    if (id < 0) {
+                        Log.e(TAG, "unable to add word: " + strings[0].trim());
+                    }
+                }
+            } finally {
+                reader.close();
+            }
+        }
+
+        public long addItem(String[] strings) {
+            Log.e(TAG, "inside addItem");
+            Log.e(TAG, "adding " + strings[0]);
+            Log.e(TAG, "adding " + strings[1]);
+            Log.e(TAG, "adding " + strings[2]);
+
+            ContentValues initialValues = new ContentValues();
+            initialValues.put(KEY_NAME, strings[0].trim());
+            initialValues.put(KEY_INVQTY, strings[1].trim());
+            initialValues.put(KEY_BUYQTY, strings[2].trim());
+
+            return mDatabase.insert(DATABASE_TABLE, null, initialValues);
+        }
 //
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

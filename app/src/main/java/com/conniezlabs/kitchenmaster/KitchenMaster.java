@@ -47,15 +47,14 @@ public class KitchenMaster extends AppCompatActivity {
         setContentView(R.layout.activity_kitchen_master);
 
         // trying to display the logo
-
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
-//        getSupportActionBar().setDisplayUseLogoEnabled(true);
-
-
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.ic_launcher);
 
         mDbHelper = new ItemsDbAdapter(this);
         mDbHelper.open();
-        fillData();
+        Cursor itemsCursor = mDbHelper.fetchAllItems();
+
+        fillData(itemsCursor);
 
         // The following is for Search Functionality
         // Handle the Search intent when received
@@ -90,23 +89,21 @@ public class KitchenMaster extends AppCompatActivity {
             Log.e(TAG, "inside Searchable handleIntent - fetched item");
 
             //sanity check - did we find any items?
-            if(c.getCount() > 0) {
-                Toast.makeText(getApplicationContext(), query + " found " + c.getCount() + " items",
-                        Toast.LENGTH_LONG).show();
-            }
+//            if(c.getCount() > 0) {
+//                Toast.makeText(getApplicationContext(), query + " found " + c.getCount() + " items",
+//                        Toast.LENGTH_LONG).show();
+//            }
 
             //process Cursor and display results
             fillData(c);
         }
     }
 
-    private void fillData() {
+    private void fillData(Cursor itemsCursor) {
         Log.e(TAG, "entered fillData");
 
-        Cursor itemsCursor = mDbHelper.fetchAllItems();
 
         ArrayList<Entry> items = new ArrayList<Entry>();
-        Log.e(TAG, "size of items " + items.size());
 
         if(itemsCursor.moveToFirst()){
             do{
@@ -114,9 +111,10 @@ public class KitchenMaster extends AppCompatActivity {
                         itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME)),
                         itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY)),
                         itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY))));
-                Log.e(TAG, "added " + itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME))
-                        + " item with inventory " + itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY))
-                        + " and to buy " + itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY)));
+                // The following is used for debugging;
+//                Log.e(TAG, "added " + itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME))
+//                        + " item with inventory " + itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY))
+//                        + " and to buy " + itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY)));
 
             }while(itemsCursor.moveToNext());
         }
@@ -125,20 +123,20 @@ public class KitchenMaster extends AppCompatActivity {
         // Bind to our new adapter.
 
         EntryAdapter adapter = new EntryAdapter(KitchenMaster.this, items);
-        // the following two lines are replacements for commented out code
         listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                //Here you can get the position and access your
+                //Here you can get the position and access your item
                 Log.e(TAG, "inside setOnItemClickListener");
                 Entry e = (Entry) adapterView.getItemAtPosition(position);
                 String rowid = e.getId();
-                Toast.makeText(getApplicationContext(),
-                        "Clicked on position " + position + ", id = " + id + ", obj - " + rowid,
-                        Toast.LENGTH_LONG).show();
+                // The following is used for debugging;
+//                Toast.makeText(getApplicationContext(),
+//                        "Clicked on position " + position + ", id = " + id + ", obj - " + rowid,
+//                        Toast.LENGTH_LONG).show();
 
                 Intent i = new Intent(KitchenMaster.this, ItemEdit.class);
                 i.putExtra(ItemsDbAdapter.KEY_ROWID, Long.parseLong(rowid));
@@ -149,30 +147,6 @@ public class KitchenMaster extends AppCompatActivity {
         });
 
        Log.e(TAG, "finished fillData");
-    }
-
-    private void fillData(Cursor c) {
-        Log.e(TAG, "entered fillData");
-
-        ArrayList<Entry> items = new ArrayList<Entry>();
-        if(c.moveToFirst()){
-            do{
-                items.add(new Entry(c.getString(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_ROWID)),
-                        c.getString(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME)),
-                        c.getString(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY)),
-                        c.getString(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY))));
-                Log.e(TAG, "added " + c.getString(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME))
-                        + " item with inventory " + c.getString(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY))
-                        + " and to buy " + c.getString(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY)));
-
-            }while(c.moveToNext());
-        }
-        c.close();
-
-        EntryAdapter adapter = new EntryAdapter(this, items);
-        listView.setAdapter(adapter);
-
-        Log.e(TAG, "finished fillData");
     }
 
     @Override
@@ -187,6 +161,7 @@ public class KitchenMaster extends AppCompatActivity {
         menu.add(0, SHOP_LIST_ID, 0, R.string.shop_list);
         Log.e(TAG, "finished onCreateOptionsMenu");
 
+        // Used to enable search in this activity
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView =
@@ -200,7 +175,7 @@ public class KitchenMaster extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.e(TAG, "entered onOptionsItemSelected");
         if(item.getTitle().equals("Search")) {
-            Toast.makeText(getApplicationContext(), "Search = "+onSearchRequested(), Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), "Search = "+onSearchRequested(), Toast.LENGTH_LONG).show();
             return onSearchRequested();
         }
         switch(item.getItemId()) {
@@ -232,13 +207,14 @@ public class KitchenMaster extends AppCompatActivity {
             	Log.e(TAG, "entered onContextItemSelected");
                 AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
                 mDbHelper.deleteItem(info.id);
-                fillData();
+                fillData(mDbHelper.fetchAllItems());
                 return true;
         }
         Log.e(TAG, "finished onContextItemSelected");
         return super.onContextItemSelected(item);
     }
 
+    // call to activity that will create a new item in the database
     private void createItem() {
         Log.e(TAG, "entered createItem");
         Intent i = new Intent(this, ItemEdit.class);
@@ -258,7 +234,7 @@ public class KitchenMaster extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
     	Log.e(TAG, "entered onActivityResult");
     	super.onActivityResult(requestCode, resultCode, intent);
-        fillData();
+        fillData(mDbHelper.fetchAllItems());
         Log.e(TAG, "finished onActivityResult");
     }
 }

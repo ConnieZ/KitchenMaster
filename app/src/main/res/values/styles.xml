@@ -19,6 +19,7 @@
     <style name="ItemRow" >
         <item name="android:textSize">18sp</item>
         <item name="android:padding">5dip</item>
+        <item name="android:textColor">#000</item>
     </style>
 
 </resources>
