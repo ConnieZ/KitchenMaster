@@ -21,7 +21,7 @@ import java.security.Key;
  * Simple items database access helper class. Defines the basic CRUD operations
  *, and gives the ability to list all items as well as
  * retrieve or modify a specific item.
- *
+ * Used this as source for singleton idea: http://www.androiddesignpatterns.com/2012/05/correctly-managing-your-sqlite-database.html
  *
  */
 public class ItemsDbAdapter {
@@ -69,7 +69,7 @@ public class ItemsDbAdapter {
      * @throws SQLException if the database could be neither opened or created
      */
     public ItemsDbAdapter open() throws SQLException {
-        mDbHelper = new DatabaseHelper(mCtx);
+        mDbHelper = DatabaseHelper.getInstance(mCtx);
         mDb = mDbHelper.getWritableDatabase();
         return this;
     }
@@ -207,10 +207,22 @@ public class ItemsDbAdapter {
 
         private final Context mHelperContext;
         private SQLiteDatabase mDatabase;
+        private static DatabaseHelper mInstance = null;
 
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
             mHelperContext = context;
+        }
+
+        public static DatabaseHelper getInstance(Context ctx) {
+
+            // Use the application context, which will ensure that you
+            // don't accidentally leak an Activity's context.
+            // See this article for more information: http://bit.ly/6LRzfx
+            if (mInstance == null) {
+                mInstance = new DatabaseHelper(ctx.getApplicationContext());
+            }
+            return mInstance;
         }
 
         @Override
