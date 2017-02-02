@@ -4,6 +4,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -15,7 +16,9 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
-public class ShoppingList extends ListActivity {
+import java.util.ArrayList;
+
+public class ShoppingList extends AppCompatActivity {
 	
 	//for logging and debugging
 	private static final String TAG = "KitchenMaster-ShopList";
@@ -29,7 +32,7 @@ public class ShoppingList extends ListActivity {
 
     private ItemsDbAdapter mDbHelper;
     private Long mRowId;
-   
+    ListView listView;
 
     /** Called when the activity is first created. */
     @Override
@@ -40,8 +43,9 @@ public class ShoppingList extends ListActivity {
         mDbHelper = new ItemsDbAdapter(this);
         mDbHelper.open();
         setTitle(R.string.shop_list);
-        fillListRows();
-        registerForContextMenu(getListView());
+        Cursor itemsCursor = mDbHelper.getShopListItems();
+        fillListRows(itemsCursor);
+        //registerForContextMenu(getListView());
 
         //BOUGHT button
         Button boughtButton = (Button) findViewById(R.id.bought_button);
@@ -60,22 +64,32 @@ public class ShoppingList extends ListActivity {
         Log.e(TAG, "success onCreate");
     }
 
-    private void fillListRows() {
+    private void fillListRows(Cursor itemsCursor) {
     	Log.e(TAG, "entered fillListRows");
     	// Get only the rows of data that have a BUY quantity
-        Cursor itemsCursor = mDbHelper.getShopListItems();
-        startManagingCursor(itemsCursor);
+        ArrayList<Entry> items = new ArrayList<Entry>();
 
-        // Create an array to specify the fields we want to display in the list
-        String[] from = new String[]{ItemsDbAdapter.KEY_NAME, ItemsDbAdapter.KEY_INVQTY, ItemsDbAdapter.KEY_BUYQTY};
+        if(itemsCursor.moveToFirst()){
+            do{
+                items.add(new Entry(itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_ROWID)),
+                        itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME)),
+                        itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY)),
+                        itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY))));
+                // The following is used for debugging;
+//                Log.e(TAG, "added " + itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME))
+//                        + " item with inventory " + itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY))
+//                        + " and to buy " + itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY)));
 
-        // and an array of the text fields we want to bind those db fields to
-        int[] to = new int[]{R.id.shop_name, R.id.shop_invqty, R.id.shop_buyqty};
+            }while(itemsCursor.moveToNext());
+        }
+        itemsCursor.close();
 
-        // Now create a simple cursor adapter and set it to display
-        SimpleCursorAdapter items =
-            new SimpleCursorAdapter(this, R.layout.shop_list_row, itemsCursor, from, to);
-        setListAdapter(items);
+        // Bind to our new adapter.
+
+        EntryAdapter adapter = new EntryAdapter(ShoppingList.this, items);
+        listView = (ListView) findViewById(android.R.id.list);
+        listView.setAdapter(adapter);
+
         Log.e(TAG, "finished fillListRows");
     }
 
@@ -128,7 +142,7 @@ public class ShoppingList extends ListActivity {
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
     	Log.e(TAG, "entered onMenuItemSelected");
         switch(item.getItemId()) {
             case INSERT_ID:
@@ -137,7 +151,7 @@ public class ShoppingList extends ListActivity {
 
         }
         Log.e(TAG, "finished onMenuItemSelected");
-        return super.onMenuItemSelected(featureId, item);
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -149,19 +163,19 @@ public class ShoppingList extends ListActivity {
         Log.e(TAG, "finished onCreateContextMenu");
     }
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case DELETE_ID:
-            	Log.e(TAG, "entered onContextItemSelected");
-                AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-                mDbHelper.deleteItem(info.id);
-                fillListRows();
-                return true;
-        }
-        Log.e(TAG, "finished onContextItemSelected");
-        return super.onContextItemSelected(item);
-    }
+//    @Override
+//    public boolean onContextItemSelected(MenuItem item) {
+//        switch(item.getItemId()) {
+//            case DELETE_ID:
+//            	Log.e(TAG, "entered onContextItemSelected");
+//                AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+//                mDbHelper.deleteItem(info.id);
+//                fillListRows();
+//                return true;
+//        }
+//        Log.e(TAG, "finished onContextItemSelected");
+//        return super.onContextItemSelected(item);
+//    }
 
     private void createItem() {
     	Log.e(TAG, "entered createItem");
@@ -171,23 +185,23 @@ public class ShoppingList extends ListActivity {
     }
 
 
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-    	Log.e(TAG, "entered onListItemClick");
-    	super.onListItemClick(l, v, position, id);
-
-        Intent i = new Intent(this, ItemEdit.class);
-        i.putExtra(ItemsDbAdapter.KEY_ROWID, id);
-
-        startActivityForResult(i, ACTIVITY_EDIT);
-        Log.e(TAG, "finished onListItemClick");
-    }
+//    @Override
+//    protected void onListItemClick(ListView l, View v, int position, long id) {
+//    	Log.e(TAG, "entered onListItemClick");
+//    	super.onListItemClick(l, v, position, id);
+//
+//        Intent i = new Intent(this, ItemEdit.class);
+//        i.putExtra(ItemsDbAdapter.KEY_ROWID, id);
+//
+//        startActivityForResult(i, ACTIVITY_EDIT);
+//        Log.e(TAG, "finished onListItemClick");
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
     	Log.e(TAG, "entered onActivityResult");
     	super.onActivityResult(requestCode, resultCode, intent);
-    	fillListRows();
+    	fillListRows(mDbHelper.getShopListItems());
         Log.e(TAG, "finished onActivityResult");
     }
 
