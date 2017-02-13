@@ -109,8 +109,8 @@ public class ItemEdit extends Activity {
     private void saveState() {
     	Log.e(TAG, "entered saveState");
         String name = mNameText.getText().toString();
-        String invqty = mInvQtyText.getText().toString();
-        String buyqty = mBuyQtyText.getText().toString();
+        int invqty = mInvQtyText.getText().toString().length() > 0? Integer.parseInt(mInvQtyText.getText().toString()):0;
+        int buyqty = mBuyQtyText.getText().toString().length() > 0? Integer.parseInt(mBuyQtyText.getText().toString()):0;
 
         if (mRowId == null & name != null & name.length() > 0) {
             if(mDbHelper.fetchItem(name.toLowerCase()).moveToFirst()){

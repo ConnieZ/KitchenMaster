@@ -40,7 +40,7 @@ public class ItemsDbAdapter {
      */
     private static final String DATABASE_CREATE =
             "create table inventory (_id integer primary key autoincrement, "
-                    + "name text not null, invqty text not null, buyqty text not null);";
+                    + "name text not null, invqty integer not null, buyqty integer not null);";
 
     private static final String DATABASE_NAME = "data";
     private static final String DATABASE_TABLE = "inventory";
@@ -89,7 +89,7 @@ public class ItemsDbAdapter {
      * @param buyqty the quantity of item to buy
      * @return rowId or -1 if failed
      */
-    public long createItem(String name, String invqty, String buyqty) {
+    public long createItem(String name, int invqty, int buyqty) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_NAME, name);
         initialValues.put(KEY_INVQTY, invqty);
@@ -170,7 +170,7 @@ public class ItemsDbAdapter {
      */
     public Cursor getShopListItems() {
         Cursor cursor = mDb.query(true, DATABASE_TABLE, new String[] {KEY_ROWID,
-                KEY_NAME, KEY_INVQTY, KEY_BUYQTY}, "buyqty is not null and buyqty <>''", null, null, null, KEY_NAME + " COLLATE NOCASE ASC", null);
+                KEY_NAME, KEY_INVQTY, KEY_BUYQTY}, "buyqty is not null and buyqty > 0", null, null, null, KEY_NAME + " COLLATE NOCASE ASC", null);
         if (cursor != null) {
             cursor.moveToFirst();
         }
@@ -189,7 +189,7 @@ public class ItemsDbAdapter {
      * @param buyqty value to set item buy quantity to
      * @return true if the item was successfully updated, false otherwise
      */
-    public boolean updateItem(long rowId, String name, String invqty, String buyqty) {
+    public boolean updateItem(long rowId, String name, int invqty, int buyqty) {
         ContentValues args = new ContentValues();
         args.put(KEY_NAME, name);
         args.put(KEY_INVQTY, invqty);
@@ -279,8 +279,8 @@ public class ItemsDbAdapter {
 
             ContentValues initialValues = new ContentValues();
             initialValues.put(KEY_NAME, strings[0].trim());
-            initialValues.put(KEY_INVQTY, strings[1].trim());
-            initialValues.put(KEY_BUYQTY, strings[2].trim());
+            initialValues.put(KEY_INVQTY, strings[1].trim().length() > 0 ? Integer.parseInt(strings[1].trim()):0);
+            initialValues.put(KEY_BUYQTY, strings[2].trim().length() > 0 ? Integer.parseInt(strings[1].trim()):0);
 
             return mDatabase.insert(DATABASE_TABLE, null, initialValues);
         }

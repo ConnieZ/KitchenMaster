@@ -24,10 +24,8 @@ public class ShoppingList extends AppCompatActivity {
 	private static final String TAG = "KitchenMaster-ShopList";
 	
     private static final int ACTIVITY_CREATE=0;
-    private static final int ACTIVITY_EDIT=1;
 
     private static final int INSERT_ID = Menu.FIRST;
-    private static final int SHOP_LIST_ID = Menu.NONE;
     private static final int DELETE_ID = Menu.FIRST + 1;
 
     private ItemsDbAdapter mDbHelper;
@@ -73,8 +71,8 @@ public class ShoppingList extends AppCompatActivity {
             do{
                 items.add(new Entry(itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_ROWID)),
                         itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME)),
-                        itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY)),
-                        itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY))));
+                        itemsCursor.getInt(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY)),
+                        itemsCursor.getInt(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY))));
                 // The following is used for debugging;
 //                Log.e(TAG, "added " + itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME))
 //                        + " item with inventory " + itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY))
@@ -102,29 +100,21 @@ public class ShoppingList extends AppCompatActivity {
         	//iterate through the cursor and update each item in the database
         	do {
         		mRowId = Long.parseLong(tempItemsCursor.getString(0));
-        		Integer intInvQty;
+        		Integer intInvQty = 0;
         		if (mRowId != null) {
         			//create a cursor for the item in question
         			Cursor item = mDbHelper.fetchItem(mRowId);
         			Log.e(TAG, "inside first if statement for ID " + mRowId);
         			startManagingCursor(item);
         			//add the BUY quantity to INV quantity and zero out BUY quantity
-        			String currentInvQty = item.getString(item.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY));
+        			int currentInvQty = item.getInt(item.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY));
         			Log.e(TAG, "declared currentInvQty");
-        			Log.e(TAG, "length of string " + currentInvQty.length());
-        			if (currentInvQty.length() > 0) {
-        				intInvQty = Integer.parseInt(currentInvQty) + Integer.parseInt(item.getString(item.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY)));
-        				Log.e(TAG, "currentInvQty wasn't null or ''");
-        			} else {
-        				Log.e(TAG, "currentInvQty was null or ''");
-        				intInvQty = Integer.parseInt(item.getString(item.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY)));
+        			Log.e(TAG, "currentInvQty " + currentInvQty);
+        			intInvQty = currentInvQty + item.getInt(item.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY));
 
-        			}
-        			String stringInvQty = intInvQty.toString();
-        			Log.e(TAG, "converted InvQty to string");
-        			String emptyBuyQty = "";
+        			int emptyBuyQty = 0;
         			Log.e(TAG, "zeroed out buyQty");
-        			mDbHelper.updateItem(mRowId, item.getString(item.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME)), stringInvQty, emptyBuyQty);
+        			mDbHelper.updateItem(mRowId, item.getString(item.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME)), intInvQty, emptyBuyQty);
         		}
 
         	} while (tempItemsCursor.moveToNext());

@@ -83,8 +83,8 @@ public class SearchableActivity extends ListActivity {
             do{
                 items.add(new Entry(c.getString(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_ROWID)),
                         c.getString(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME)),
-                        c.getString(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY)),
-                        c.getString(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY))));
+                        c.getInt(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY)),
+                        c.getInt(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY))));
                 Log.e(TAG, "added " + c.getString(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME))
                         + " item with inventory " + c.getString(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY))
                         + " and to buy " + c.getString(c.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY)));
