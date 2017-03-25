@@ -1,6 +1,5 @@
 package com.conniezlabs.kitchenmaster;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -11,10 +10,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.AdapterView.AdapterContextMenuInfo;
+
 
 import java.util.ArrayList;
 
@@ -24,6 +23,8 @@ public class ShoppingList extends AppCompatActivity {
 	private static final String TAG = "KitchenMaster-ShopList";
 	
     private static final int ACTIVITY_CREATE=0;
+    private static final int ACTIVITY_EDIT=1;
+
 
     private static final int INSERT_ID = Menu.FIRST;
     private static final int DELETE_ID = Menu.FIRST + 1;
@@ -73,11 +74,6 @@ public class ShoppingList extends AppCompatActivity {
                         itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME)),
                         itemsCursor.getInt(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY)),
                         itemsCursor.getInt(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY))));
-                // The following is used for debugging;
-//                Log.e(TAG, "added " + itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME))
-//                        + " item with inventory " + itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY))
-//                        + " and to buy " + itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY)));
-
             }while(itemsCursor.moveToNext());
         }
         itemsCursor.close();
@@ -87,6 +83,22 @@ public class ShoppingList extends AppCompatActivity {
         EntryAdapter adapter = new EntryAdapter(ShoppingList.this, items);
         listView = (ListView) findViewById(android.R.id.list);
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                //Get the position and access the item
+                Log.e(TAG, "inside setOnItemClickListener");
+                Entry e = (Entry) adapterView.getItemAtPosition(position);
+                String rowid = e.getId();
+
+                Intent i = new Intent(ShoppingList.this, ItemEdit.class);
+                i.putExtra(ItemsDbAdapter.KEY_ROWID, Long.parseLong(rowid));
+
+                startActivityForResult(i, ACTIVITY_EDIT);
+
+            }
+        });
 
         Log.e(TAG, "finished fillListRows");
     }

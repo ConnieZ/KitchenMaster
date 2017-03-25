@@ -284,7 +284,7 @@ public class ItemsDbAdapter {
 
             return mDatabase.insert(DATABASE_TABLE, null, initialValues);
         }
-//
+
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             Log.w(TAG, "Upgrading database from version " + oldVersion + " to "

@@ -42,7 +42,6 @@ public class ItemEdit extends Activity {
             (Long) savedInstanceState.getSerializable(ItemsDbAdapter.KEY_ROWID);
         if (mRowId == null) {
             Bundle extras = getIntent().getExtras();
-            //Log.e(TAG, "inside onCreate: extras - " + extras.getLong(ItemsDbAdapter.KEY_ROWID) + ", mRowid - " +mRowId);
             mRowId = extras != null ? extras.getLong(ItemsDbAdapter.KEY_ROWID)
                                     : null;
         Log.e(TAG, "finished onCreate");

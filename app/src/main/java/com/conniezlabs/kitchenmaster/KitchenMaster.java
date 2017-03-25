@@ -88,12 +88,6 @@ public class KitchenMaster extends AppCompatActivity {
             Cursor c = mDbHelper.fetchItem(query);
             Log.e(TAG, "inside Searchable handleIntent - fetched item");
 
-            //sanity check - did we find any items?
-//            if(c.getCount() > 0) {
-//                Toast.makeText(getApplicationContext(), query + " found " + c.getCount() + " items",
-//                        Toast.LENGTH_LONG).show();
-//            }
-
             //process Cursor and display results
             fillData(c);
         }
@@ -111,17 +105,11 @@ public class KitchenMaster extends AppCompatActivity {
                         itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME)),
                         itemsCursor.getInt(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY)),
                         itemsCursor.getInt(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY))));
-                // The following is used for debugging;
-//                Log.e(TAG, "added " + itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_NAME))
-//                        + " item with inventory " + itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_INVQTY))
-//                        + " and to buy " + itemsCursor.getString(itemsCursor.getColumnIndexOrThrow(ItemsDbAdapter.KEY_BUYQTY)));
-
-            }while(itemsCursor.moveToNext());
+             }while(itemsCursor.moveToNext());
         }
         itemsCursor.close();
 
-        // Bind to our new adapter.
-
+        // Bind items to the new adapter.
         EntryAdapter adapter = new EntryAdapter(KitchenMaster.this, items);
         listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(adapter);
@@ -129,14 +117,10 @@ public class KitchenMaster extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                //Here you can get the position and access your item
+                //Get the position and access the item
                 Log.e(TAG, "inside setOnItemClickListener");
                 Entry e = (Entry) adapterView.getItemAtPosition(position);
                 String rowid = e.getId();
-                // The following is used for debugging;
-//                Toast.makeText(getApplicationContext(),
-//                        "Clicked on position " + position + ", id = " + id + ", obj - " + rowid,
-//                        Toast.LENGTH_LONG).show();
 
                 Intent i = new Intent(KitchenMaster.this, ItemEdit.class);
                 i.putExtra(ItemsDbAdapter.KEY_ROWID, Long.parseLong(rowid));
@@ -175,7 +159,6 @@ public class KitchenMaster extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.e(TAG, "entered onOptionsItemSelected");
         if(item.getTitle().equals("Search")) {
-//            Toast.makeText(getApplicationContext(), "Search = "+onSearchRequested(), Toast.LENGTH_LONG).show();
             return onSearchRequested();
         }
         switch(item.getItemId()) {
@@ -214,7 +197,7 @@ public class KitchenMaster extends AppCompatActivity {
         return super.onContextItemSelected(item);
     }
 
-    // call to activity that will create a new item in the database
+    // Method call to activity that will create a new item in the database
     private void createItem() {
         Log.e(TAG, "entered createItem");
         Intent i = new Intent(this, ItemEdit.class);
@@ -222,13 +205,14 @@ public class KitchenMaster extends AppCompatActivity {
         Log.e(TAG, "finished createItem");
     }
 
-    //call to activity that will open shopping list
+    //Method to call to activity that will open shopping list
     private void openShopList() {
     	Log.e(TAG, "entered openShopList");
         Intent i = new Intent(this, ShoppingList.class);
         startActivityForResult(i, SHOP_LIST_ID);
         Log.e(TAG, "finished openShopList");
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {

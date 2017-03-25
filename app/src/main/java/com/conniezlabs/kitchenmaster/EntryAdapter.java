@@ -1,6 +1,10 @@
 package com.conniezlabs.kitchenmaster;
 
-// Grateful for this source: http://stackoverflow.com/questions/11678909/use-array-adapter-with-more-views-in-row-in-listview
+
+/**
+ * Adapter to display entry items
+ * Grateful for this source: http://stackoverflow.com/questions/11678909/use-array-adapter-with-more-views-in-row-in-listview
+ */
 
 import android.content.Context;
 import android.view.LayoutInflater;

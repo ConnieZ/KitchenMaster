@@ -6,6 +6,11 @@ package com.conniezlabs.kitchenmaster;
 // Most helpful tool to fix non-clickable search widget:
 // http://stackoverflow.com/questions/17311434/search-dialog-is-not-called-onsearchrequested
 
+/**
+ * This activity is no longer used. All of its functionality was transferred to main activity -
+ * KitchenMaster. This is preserved just to illustrate how it was done to begin with
+ */
+
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Context;
